@@ -1,5 +1,5 @@
-const GITHUB_RAW_MANIFEST_URL = 'https://raw.githubusercontent.com/nicholelochner/lochner.tech_apparel/main/ipfs-version.json';
-const GITHUB_MAIN_COMMIT_API_URL = 'https://api.github.com/repos/nicholelochner/lochner.tech_apparel/commits/main';
+const GITHUB_RAW_MANIFEST_URL = 'https://raw.githubusercontent.com/alfmir-ai/www.lochner.tech/main/ipfs-version.json';
+const GITHUB_MAIN_COMMIT_API_URL = 'https://api.github.com/repos/alfmir-ai/www.lochner.tech/commits/main';
 const MANIFEST_PATH = 'ipfs-version.json';
 const DOMAIN_NAME = 'lochner.tech';
 const IPNS_ID = 'k2k4r8jw4dtnalpkgklrqeflhsgderg6a8wn5lix7bww1yjemm0rx7ye';
