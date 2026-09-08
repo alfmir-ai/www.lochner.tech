@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!-- Unix time (ms): 1788899671367 -->
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link id="favicon" rel="icon" href="/alfe_favicon_64x64.ico">
+ <link rel="alternate icon" href="/alfe_favicon_64x64.ico" type="image/x-icon">
+ <title>Lochner Technology</title>
+ <style>
+  @font-face {
+   font-family: "Lochner Brand Sans";
+   src: url("/assets/fonts/LochnerBrandSans-Regular.ttf") format("truetype");
+   font-weight: 400;
+   font-style: normal;
+   font-display: swap;
+  }
+
+  @font-face {
+   font-family: "Lochner Brand Sans";
+   src: url("/assets/fonts/LochnerBrandSans-Bold.ttf") format("truetype");
+   font-weight: 700;
+   font-style: normal;
+   font-display: swap;
+  }
+
+  :root {
+   color-scheme: dark;
+  }
+  *, *::before, *::after {
+   box-sizing: border-box;
+  }
+
+  body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   background: linear-gradient(180deg, #0f172a 0%, #111827 35%, #0b1020 100%);
+   color: #f1f1f1;
+   min-height: 100vh;
+  }
+  .site-header {
+   position: relative;
+   overflow: hidden;
+   text-align: center;
+   padding: 1.75rem 1.25rem 1.1rem;
+   background:
+    radial-gradient(circle at 22% 16%, rgba(0, 229, 255, 0.28), transparent 36%),
+    radial-gradient(circle at 78% 22%, rgba(105, 117, 255, 0.35), transparent 44%),
+    linear-gradient(135deg, #10182c 0%, #1f3b6c 52%, #13345a 100%);
+   color: #ffffff;
+   border-bottom: 1px solid rgba(90, 162, 255, 0.35);
+   box-shadow: inset 0 -1px 0 rgba(140, 201, 255, 0.24), 0 10px 30px rgba(1, 7, 20, 0.55);
+  }
+  .site-header h1 {
+   margin: 0;
+   font-size: clamp(1.65rem, 3vw, 2.35rem);
+   letter-spacing: 0.05em;
+   text-shadow: 0 0 16px rgba(153, 220, 255, 0.22);
+  }
+
+  .site-title-link {
+   color: inherit;
+   text-decoration: none;
+  }
+
+  .site-title-link:hover,
+  .site-title-link:focus-visible {
+   text-decoration: none;
+  }
+  .site-header p {
+   margin: 0.45rem 0 0;
+   font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+   color: rgba(220, 240, 255, 0.9);
+  }
+  .cta-buttons {
+   display: flex;
+   justify-content: center;
+   gap: 0.8rem;
+   flex-wrap: wrap;
+   margin-top: 0.8rem;
+  }
+  .cta-button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.35rem;
+   padding: 0.65rem 1.15rem;
+   border-radius: 999px;
+   border: 2px solid #00e5ff;
+   background: rgba(0, 229, 255, 0.12);
+   color: #00e5ff;
+   font-weight: 700;
+   text-decoration: none;
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+   transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+  .cta-button:hover,
+  .cta-button:focus-visible {
+   transform: translateY(-2px);
+   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+   background: rgba(0, 229, 255, 0.18);
+  }
+  main {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 2rem;
+   max-width: 1100px;
+   margin: 0 auto;
+   padding: 1.5rem 1.25rem 3rem;
+   width: min(100%, 1200px);
+  }
+  .section-link {
+   display: block;
+   width: 100%;
+   max-width: 1080px;
+   margin: 0 auto;
+   padding: 2rem;
+   border-radius: 12px;
+   background: #1a1d24;
+   color: inherit;
+   text-decoration: none;
+   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+   transition: transform 0.2s ease, box-shadow 0.2s ease;
+   border: none;
+   text-align: left;
+   cursor: pointer;
+  }
+  .section-link-with-thumb {
+   display: grid;
+   grid-template-columns: minmax(180px, 340px) minmax(0, 1fr);
+   align-items: stretch;
+   gap: 1.25rem;
+  }
+  .section-thumb {
+   width: 100%;
+   max-width: 340px;
+   aspect-ratio: 4 / 3;
+   border-radius: 10px;
+   margin: 0;
+   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+   object-fit: cover;
+   align-self: center;
+   justify-self: start;
+  }
+  .alsh-feature-card {
+   grid-template-columns: minmax(260px, 520px) minmax(0, 1fr);
+   gap: 0.8rem;
+  }
+  .alsh-thumb {
+   max-width: 520px;
+   width: 100%;
+   height: auto;
+   aspect-ratio: auto;
+   object-fit: contain;
+   object-position: center;
+  }
+  .section-body {
+   display: flex;
+   flex-direction: column;
+   gap: 0.35rem;
+  }
+  .section-link:hover,
+  .section-link:focus-visible {
+   transform: translateY(-4px);
+   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+  .section-link h1,
+  .section-link h2 {
+   margin: 0 0 0.75rem;
+   font-size: clamp(1.75rem, 3vw, 2.5rem);
+   line-height: 1.2;
+  }
+  .section-link .section-subtitle {
+   margin: 0 0 0.55rem;
+   font-size: clamp(1.1rem, 2.3vw, 1.65rem);
+   line-height: 1.25;
+   color: #d9e2ff;
+  }
+  .section-link .section-subtitle-small {
+   font-size: clamp(1rem, 1.8vw, 1.3rem);
+  }
+  .lochner-apparel-title {
+   font-size: clamp(1.4rem, 2.8vw, 2rem) !important;
+   margin-bottom: 0.6rem !important;
+  }
+  .section-link p {
+   margin: 0;
+   font-size: 1rem;
+   color: #d0d0d0;
+  }
+  .section-link small {
+   display: block;
+   margin-top: 0.5rem;
+   font-size: 0.9rem;
+   color: #a0a0a0;
+  }
+  .section-link.hidden {
+   display: none !important;
+  }
+  .project-grid-section {
+   background: #161922;
+   border-radius: 12px;
+   padding: 2rem;
+   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+   border: 1px solid #232838;
+   display: block;
+   width: 100%;
+   max-width: 1080px;
+   margin: 0 auto;
+  }
+  .project-grid-header {
+   margin: 0 0 1.25rem;
+   font-size: clamp(1.4rem, 2.8vw, 2rem);
+   line-height: 1.2;
+  }
+  .project-grid-link {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.35rem;
+   color: #00e5ff;
+   font-weight: 600;
+   text-decoration: none;
+   margin: 0 0 1.25rem;
+  }
+  .project-grid-link:hover,
+  .project-grid-link:focus-visible {
+   text-decoration: underline;
+  }
+  .project-grid {
+   display: grid;
+   gap: 1rem;
+   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+   justify-items: center;
+  }
+  .project-card {
+   background: #1e2430;
+   border-radius: 10px;
+   overflow: hidden;
+   border: 1px solid #2c3242;
+   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+   width: 100%;
+   max-width: 320px;
+  }
+  .project-card:hover,
+  .project-card:focus-visible {
+   transform: translateY(-2px);
+   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+   border-color: #3a4254;
+  }
+  .project-thumb {
+   position: relative;
+   aspect-ratio: 16 / 9;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #ffffff;
+   font-weight: 700;
+   letter-spacing: 0.03em;
+   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+   background-size: 200% 200%;
+  }
+  .project-thumb span {
+   font-size: 1rem;
+  }
+  .project-info {
+   padding: 0.9rem 1rem 1.25rem;
+  }
+  .project-info h4 {
+   margin: 0;
+   font-size: 1.05rem;
+   color: #e6edff;
+  }
+  .project-info p {
+   margin: 0.35rem 0 0;
+   color: #c3cbe0;
+   font-size: 0.95rem;
+   line-height: 1.45;
+  }
+  @media (max-width: 720px) {
+   .section-link-with-thumb {
+    grid-template-columns: 1fr;
+   }
+   .section-thumb {
+    width: 100%;
+    max-height: 260px;
+   }
+   .alsh-thumb {
+    max-height: 360px;
+   }
+  }
+  .cta-button {
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+  .cta-button-icon {
+   display: inline-flex;
+   width: 1.05em;
+   height: 1.05em;
+   flex-shrink: 0;
+  }
+
+  .cta-button-icon svg {
+   width: 100%;
+   height: 100%;
+   fill: currentColor;
+  }
+
+  .brand-logo {
+   display: block;
+   height: 40px;
+   width: auto;
+   max-width: 100%;
+   object-fit: contain;
+  }
+
+  .alsh-logo-title {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.45rem;
+   width: min(100%, 360px);
+   overflow: visible;
+   line-height: 1.2;
+   padding-bottom: 0;
+   margin-bottom: 0.2rem !important;
+   font-size: clamp(1.5rem, 4vw, 2.3rem);
+   font-weight: 600;
+   letter-spacing: 0.01em;
+  }
+  .alsh-logo-title .alsh-shell-line {
+   display: block;
+  }
+  .sidebar-beta-badge {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0.12rem 0.5rem;
+   border-radius: 999px;
+   background: #2563eb;
+   color: #fff;
+   font-size: 0.65rem;
+   font-weight: 700;
+   letter-spacing: 0.05em;
+   text-transform: uppercase;
+   line-height: 1;
+   flex-shrink: 0;
+  }
+  .site-footer {
+   text-align: center;
+   color: #9aa4ba;
+   padding: 0 1.5rem 2rem;
+  }
+
+  .site-footer-alert {
+   font-size: 1.35rem;
+   font-weight: 700;
+   line-height: 1.45;
+  }
+
+
+
+  .site-header {
+   overflow: visible;
+   z-index: 10;
+  }
+
+  .cta-dropdown {
+   position: relative;
+  }
+
+  .cta-dropdown summary {
+   cursor: pointer;
+   list-style: none;
+  }
+
+  .cta-dropdown summary::-webkit-details-marker {
+   display: none;
+  }
+
+  .cta-dropdown[open] summary {
+   background: rgba(0, 229, 255, 0.18);
+  }
+
+  .cta-dropdown-menu {
+   position: absolute;
+   top: calc(100% + 0.5rem);
+   left: 50%;
+   z-index: 20;
+   display: grid;
+   min-width: 190px;
+   overflow: visible;
+   transform: translateX(-50%);
+   border: 1px solid rgba(0, 229, 255, 0.55);
+   border-radius: 12px;
+   background: #111827;
+   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+  }
+
+  .cta-dropdown-header {
+   display: flex;
+   width: 100%;
+   align-items: center;
+   gap: 0.5rem;
+   padding: 0.7rem 1rem;
+   border: 0;
+   border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+   background: transparent;
+   color: #00e5ff;
+   font: inherit;
+   font-weight: 700;
+   text-align: left;
+   white-space: nowrap;
+   cursor: pointer;
+  }
+
+  .cta-dropdown-tooltip {
+   position: absolute;
+   top: 0.35rem;
+   left: calc(100% + 0.75rem);
+   width: max-content;
+   max-width: min(260px, calc(100vw - 2rem));
+   padding: 0.65rem 0.8rem;
+   border: 1px solid rgba(0, 229, 255, 0.55);
+   border-radius: 8px;
+   background: #111827;
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+   color: #dffaff;
+   font-size: 0.9rem;
+   line-height: 1.35;
+   white-space: normal;
+  }
+
+  .cta-dropdown-tooltip[hidden] {
+   display: none;
+  }
+
+  .cta-dropdown-menu a {
+   padding: 0.7rem 1rem;
+   color: #dffaff;
+   font-weight: 700;
+   text-align: left;
+   text-decoration: none;
+   white-space: nowrap;
+  }
+
+  .cta-dropdown-menu a:hover,
+  .cta-dropdown-menu a:focus-visible {
+   background: rgba(0, 229, 255, 0.16);
+   color: #00e5ff;
+  }
+
+ </style>
+</head>
+<body>
+ <!-- SHARED_HEADER -->
+ <main>
+  <a href="lochner-apparel.html" class="section-link section-link-with-thumb">
+   <!-- <img class="section-thumb" src="images/lochner/1.jpg" alt="Lochner Apparel AI-generated T-shirt design on a model"> -->
+   <div class="section-body">
+    <h2 class="lochner-apparel-title">Lochner Apparel</h2>
+    <p>T-Shirt brand on eBay, Amazon, and Shopify with on-demand Printify fulfillment. Designs generated with the assistance of Alfmir.ai</p>
+    <small>ebay.com/str/lochnerapparel</small>
+   </div>
+  </a>
+  <a class="section-link section-link-with-thumb alsh-feature-card" href="alfmir.ai.html" target="_blank" rel="noopener">
+   <img class="section-thumb alsh-thumb" src="images/alfmir/1.png" alt="Alfmir.ai interface preview">
+   <div class="section-body">
+    <h1 class="alsh-logo-title">Alfmir.ai <span class="sidebar-beta-badge">Beta</span></h1>
+    <h2 class="section-subtitle">Privacy-first AI</h2>
+    <h2 class="section-subtitle">IPFS Content Verifiable</h2>
+    <h2 class="section-subtitle section-subtitle-small">Run the AI on your own computer</h2>
+    <h2 class="section-subtitle section-subtitle-small">Agentic Software Development</h2>
+    <p>Engineered for privacy and security.</p>
+    <p>AI code agent &amp; chat for full-project workflows.</p>
+    <p>Free, Libre, Open-Source, MIT License</p>
+   </div>
+  </a>
+  <!-- <a href="lochner-soaps.html" class="section-link section-link-with-thumb">
+   <div class="section-body">
+    <h2 class="lochner-apparel-title">Lochner Soaps</h2>
+    <p>AI-assisted soap brand available through the same eBay storefront.</p>
+    <small>ebay.com/str/lochnerapparel</small>
+   </div>
+  </a> -->
+  <!-- <section class="project-grid-section" aria-label="Project gallery">
+   <h3 class="project-grid-header">More Projects</h3>
+   <a class="cta-button" href="https://github.com/nicholelochner" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile">
+        <span class="cta-button-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M12 0C5.37 0 0 5.37 0 12a12 12 0 0 0 8.21 11.4c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.1-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.08 1.84 2.84 1.31 3.53 1 .11-.78.42-1.31.77-1.61-2.66-.3-5.47-1.33-5.47-5.91 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.33 3.3 1.23a11.43 11.43 0 0 1 6 0c2.28-1.56 3.29-1.23 3.29-1.23.67 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.81 5.61-5.49 5.91.43.37.82 1.1.82 2.22v3.29c0 .32.21.7.83.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z" />
+          </svg>
+        </span>
+        <span>GitHub</span>
+      </a>
+   <div class="project-grid" hidden>
+    <div class="project-card" tabindex="0">
+     <div class="project-thumb" style="background-image: linear-gradient(135deg, #4f46e5, #7c3aed);">
+      <span>Project One</span>
+     </div>
+     <div class="project-info">
+      <h4>Project One</h4>
+      <p>Placeholder thumbnail representing a featured build.</p>
+     </div>
+    </div>
+   </div>
+  </section> -->
+ </main>
+ <!-- SHARED_FOOTER -->
+
+</body>
+</html>

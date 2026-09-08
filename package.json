@@ -1,0 +1,16 @@
+{
+  "name": "lochner-tech-site",
+  "version": "1.0.0",
+  "description": "Node.js static host for lochner.tech with HTTP and HTTPS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:ipfs": "node scripts/build-ipfs.js",
+    "export:ipfs": "node scripts/build-ipfs.js",
+    "ipfs:prepare": "IPFS_VERIFIER_INCLUDE_GITHUB=${IPFS_VERIFIER_INCLUDE_GITHUB:-true} ./ipfs_prepare_release.sh",
+    "ipfs:publish": "./ipfs_publish.sh",
+    "ipfs:update": "./ipfs_update.sh",
+    "update:html-timestamps": "node scripts/update-html-timestamps.js",
+    "generate:ipfs-version": "node scripts/generate-ipfs-version.js"
+  }
+}

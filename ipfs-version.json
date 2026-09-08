@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "project": "lochner.tech",
+  "domainName": "lochner.tech",
+  "ipnsId": "k2k4r8jw4dtnalpkgklrqeflhsgderg6a8wn5lix7bww1yjemm0rx7ye",
+  "source": "https://lochner.tech",
+  "manifestPath": "ipfs-version.json",
+  "gitRevision": "bf9854848ffa4e6c497304c5baca7f437de7a8de",
+  "gitRevisionDirty": false,
+  "gitRepositoryUrl": "https://github.com/nicholelochner/lochner.tech_apparel",
+  "gitCommitUrl": "https://github.com/nicholelochner/lochner.tech_apparel/commit/bf9854848ffa4e6c497304c5baca7f437de7a8de",
+  "gitTreeUrl": "https://github.com/nicholelochner/lochner.tech_apparel/tree/bf9854848ffa4e6c497304c5baca7f437de7a8de",
+  "includeGithubVerification": true,
+  "contentSha256": "9f41ee6cadbf9cbf421058a95f631e1922172aba0085b5d98f2e7617466659d9",
+  "previousContentSha256": [
+    "c43fbb579150fd58462825f00ca6c1caa13091f9d1618562a083a2726a950d75",
+    "ca990b831d91b631d05e1b3d1c86ad045546985c30cf9bceeb98ad59ede88cca"
+  ],
+  "files": [
+    {
+      "path": "50x.html",
+      "bytes": 636,
+      "sha256": "2870436d85478ee9f53ad009fa6c36a31d70567b39ee8f9886b1c3e33232bb45"
+    },
+    {
+      "path": "alfe_favicon_64x64.ico",
+      "bytes": 5152,
+      "sha256": "a222dcf374f28be7a568d5f25ea51b85b434ed234540faef8578df4b0e216234"
+    },
+    {
+      "path": "alfmir.ai.html",
+      "bytes": 86268,
+      "sha256": "0316c46e44dd7d3abc6d8717f6cd698c54545354745d549bc891a9007a0ef915"
+    },
+    {
+      "path": "assets/fonts/LochnerBrandSans-Bold.ttf",
+      "bytes": 708920,
+      "sha256": "5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895"
+    },
+    {
+      "path": "assets/fonts/LochnerBrandSans-Regular.ttf",
+      "bytes": 759720,
+      "sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280"
+    },
+    {
+      "path": "images/alfmir/1.png",
+      "bytes": 355971,
+      "sha256": "abb9bb1de7fe9642d5cf30ad8ad50929577fc798aaf5ac407c6f2de5a7afb1e0"
+    },
+    {
+      "path": "images/alfmir/2.png",
+      "bytes": 302662,
+      "sha256": "2603e832e5bc9b4deeb00d84a145292416d228fe0ff328d3b893004d6ae6f340"
+    },
+    {
+      "path": "images/alfmir/3.png",
+      "bytes": 460617,
+      "sha256": "82a5fdcb318c4f723a82a72eceec73899becf884b00db8c3f8812b6768d15ff4"
+    },
+    {
+      "path": "images/alfmir/4.png",
+      "bytes": 104773,
+      "sha256": "00a03d06e456088bda966da86b0a268e85417b5330594820d6c4f6016f1ed6fc"
+    },
+    {
+      "path": "images/alfmir/5.png",
+      "bytes": 362558,
+      "sha256": "80c822dd00517fa4f846ce887e88525fd329d30edb166d9122e9bf39ee32c89e"
+    },
+    {
+      "path": "images/alfmir/6.png",
+      "bytes": 404682,
+      "sha256": "c54977d2331e3eb58d7335f82d122c0a1464a99290e76caf05fddc1f70e8c472"
+    },
+    {
+      "path": "images/lochner/1.jpg",
+      "bytes": 119124,
+      "sha256": "16aa76d3b8da6fb471446b2f9757c724be9ea0bfedb69708205fb5fba0eca7c9"
+    },
+    {
+      "path": "images/lochner/2.webp",
+      "bytes": 27230,
+      "sha256": "8d11461f2338bb72a06fcd5727116f8e0c094fbf6da107aacc1339c5f3f100d3"
+    },
+    {
+      "path": "index.html",
+      "bytes": 83368,
+      "sha256": "a2caf8d66e296de77d0d8f9738458470b53fc578083fddd64259542588e0984d"
+    },
+    {
+      "path": "lochner-apparel.html",
+      "bytes": 80592,
+      "sha256": "93ac9db60515c67bc9fb0fa1873b76f0b2e86fd4689b092e2889e335d44ef3be"
+    }
+  ]
+}
