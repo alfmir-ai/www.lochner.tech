@@ -4,7 +4,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const MANIFEST_PATH = 'ipfs-version.json';
-const GITHUB_REPOSITORY_URL = 'https://github.com/nicholelochner/lochner.tech_apparel';
+const GITHUB_REPOSITORY_URL = 'https://github.com/alfmir-ai/www.lochner.tech';
 const DOMAIN_NAME = 'lochner.tech';
 const IPNS_ID = process.env.LOCHNER_IPNS_ID || process.env.LOCHNER_EXPECTED_IPNS_ID || 'k2k4r8jw4dtnalpkgklrqeflhsgderg6a8wn5lix7bww1yjemm0rx7ye';
 const MAX_PREVIOUS_CONTENT_SHA256 = 2;
