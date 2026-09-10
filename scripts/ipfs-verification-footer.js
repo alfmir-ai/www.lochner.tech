@@ -718,7 +718,8 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
           const url = resolveCurrentPublishedUrl(file.path);
           const response = await fetch(url + '?verify=' + Date.now(), { cache: 'no-store' });
           if (!response.ok) {
-            throw new Error(response.status + ' ' + response.statusText);
+            const rateLimitHint = response.status === 429 ? ' (rate limited by the remote server)' : '';
+            throw new Error('HTTP ' + response.status + ' ' + response.statusText + rateLimitHint + ' while fetching current-site file: ' + url);
           }
 
           const buffer = await response.arrayBuffer();
@@ -1056,7 +1057,10 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
           return fetch(url, { cache: 'no-store', signal: controller.signal })
             .then((response) => {
               if (!response.ok) {
-                throw new Error(response.status + ' ' + response.statusText);
+                const rateLimitHint = response.status === 429 ? ' (rate limited by the remote server)' : '';
+                const httpError = new Error('HTTP ' + response.status + ' ' + response.statusText + rateLimitHint + ' while fetching ' + label + ': ' + url);
+                httpError.fetchContextIncluded = true;
+                throw httpError;
               }
               logVerificationStep('fetch response: ' + label, {
                 url,
@@ -1067,12 +1071,15 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
             })
             .catch((error) => {
               if (error.name === 'AbortError') {
-                const timeoutError = new Error('timed out after ' + Math.round(timeoutMs / 1000) + 's');
+                const timeoutError = new Error('Timed out after ' + Math.round(timeoutMs / 1000) + 's while fetching ' + label + ': ' + url);
                 logVerificationStep('fetch failed: ' + label, { url, error: timeoutError.message });
                 throw timeoutError;
               }
-              logVerificationStep('fetch failed: ' + label, { url, error: error.message });
-              throw error;
+              const contextualError = error.fetchContextIncluded
+                ? error
+                : new Error('Failed to fetch ' + label + ' from ' + url + ': ' + error.message);
+              logVerificationStep('fetch failed: ' + label, { url, error: contextualError.message });
+              throw contextualError;
             })
             .finally(() => window.clearTimeout(timeoutId));
         }
