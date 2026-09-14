@@ -498,7 +498,7 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
         overflow-wrap: anywhere;
       }
     </style>
-    <small>© ${copyrightYear} Lochner Technology · Minneapolis, MN</small>
+    <small>© 2022 - ${copyrightYear} Lochner Technology · Minneapolis, MN</small>
     <details id="ipfs-footer-verification" class="ipfs-footer-verification" data-state="loading">
       <summary id="ipfs-footer-verification-summary" class="ipfs-footer-verification-summary" aria-labelledby="ipfs-footer-verification-title" aria-controls="ipfs-footer-verification-content" aria-expanded="false">
         <span class="ipfs-footer-verification-heading">
