@@ -350,6 +350,12 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
         color: #bbf7d0;
       }
 
+      .ipfs-footer-verification-detail[data-state=warning] strong,
+      .ipfs-footer-verification-detail[data-state=warning] span,
+      .ipfs-footer-verification-detail[data-state=warning] a {
+        color: var(--ipfs-footer-reddit-orange);
+      }
+
       .ipfs-footer-explainer,
       .ipfs-footer-public-gateways {
         margin-top: 0.75rem;
@@ -543,7 +549,7 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
         </div>
       </div>
       <p class="ipfs-footer-explainer">
-        <strong>How this verifies:</strong> The JavaScript fetches this site's manifest and public IPFS/IPNS gateway manifests, compares their Git revisions, aggregate content hashes, and every files[] path, byte count, and SHA-256 hash, then downloads and hashes the current site's non-image files in your browser.${includeGithub ? ' It also compares the GitHub raw manifest and current main-branch revision.' : ''}
+        <strong>How this verifies:</strong> The JavaScript fetches this site's manifest and public IPFS/IPNS gateway manifests, compares their Git revisions, aggregate content hashes, and every files[] path, byte count, and SHA-256 hash, then downloads and hashes the current site's non-image files in your browser.${includeGithub ? ' It also compares the GitHub raw manifest and current main-branch revision as an advisory cross-check; a GitHub rate limit or outage is reported as a warning and does not fail the IPFS verification.' : ''}
       </p>
       <noscript>
         <p class="ipfs-footer-explainer"><strong>JavaScript is required</strong> to run the automatic verification. Without JavaScript, these controls can only open the evidence files.</p>
@@ -1228,21 +1234,42 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
           }
         }
 
-        async function fetchGithubMainCommit() {
-          const commit = await fetchJson(GITHUB_MAIN_COMMIT_API_URL + '?verify=' + Date.now(), 8000, 'GitHub main commit API');
-
-          if (!commit || typeof commit.sha !== 'string' || !commit.sha) {
-            throw new Error('GitHub main commit response did not include a commit SHA');
+        async function fetchGithubRawManifest() {
+          try {
+            const manifest = await fetchJson(GITHUB_RAW_MANIFEST_URL + '?verify=' + Date.now(), 8000, 'GitHub raw manifest');
+            return { available: true, error: null, manifest };
+          } catch (error) {
+            logVerificationStep('GitHub raw manifest unavailable; continuing with IPFS-only verification', { error: error.message });
+            return { available: false, error, manifest: null };
           }
+        }
 
-          const summarizedCommit = {
-            sha: commit.sha,
-            parentShas: Array.isArray(commit.parents)
-              ? commit.parents.map((parent) => parent && parent.sha).filter(Boolean)
-              : []
-          };
-          logVerificationStep('GitHub main commit parsed', summarizedCommit);
-          return summarizedCommit;
+        async function fetchGithubMainCommit() {
+          try {
+            const commit = await fetchJson(GITHUB_MAIN_COMMIT_API_URL + '?verify=' + Date.now(), 8000, 'GitHub main commit API');
+
+            if (!commit || typeof commit.sha !== 'string' || !commit.sha) {
+              throw new Error('GitHub main commit response did not include a commit SHA');
+            }
+
+            const summarizedCommit = {
+              available: true,
+              error: null,
+              sha: commit.sha,
+              parentShas: Array.isArray(commit.parents)
+                ? commit.parents.map((parent) => parent && parent.sha).filter(Boolean)
+                : []
+            };
+            logVerificationStep('GitHub main commit parsed', summarizedCommit);
+            return summarizedCommit;
+          } catch (error) {
+            logVerificationStep('GitHub main commit unavailable; continuing without GitHub revision check', { error: error.message });
+            return { available: false, error, sha: null, parentShas: [] };
+          }
+        }
+
+        function isGithubRateLimitError(error) {
+          return Boolean(error && /rate limited|HTTP 429/i.test(error.message || ''));
         }
 
         async function scheduleVerificationAfterDelay() {
@@ -1309,28 +1336,57 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
             manifestLinkEl.href = CURRENT_MANIFEST_URL;
             setStatus('loading', 'Loaded current site manifest; checking ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub and ' : '') + 'IPFS…');
 
-            const [githubManifest, gatewayResult, githubMainCommit] = await Promise.all([
-              INCLUDE_GITHUB_VERIFICATION ? fetchJson(GITHUB_RAW_MANIFEST_URL + '?verify=' + Date.now(), 8000, 'GitHub raw manifest') : Promise.resolve(originManifest),
+            const [githubManifestResult, gatewayResult, githubMainCommitResult] = await Promise.all([
+              INCLUDE_GITHUB_VERIFICATION ? fetchGithubRawManifest() : Promise.resolve({ available: true, error: null, manifest: originManifest }),
               fetchGatewayManifests(),
-              INCLUDE_GITHUB_VERIFICATION ? fetchGithubMainCommit() : Promise.resolve({ sha: originManifest.gitRevision, parentShas: [] })
+              INCLUDE_GITHUB_VERIFICATION ? fetchGithubMainCommit() : Promise.resolve({ available: true, error: null, sha: originManifest.gitRevision, parentShas: [] })
             ]);
+
+            const githubManifest = githubManifestResult.manifest;
+            const githubMainCommit = githubMainCommitResult;
+            const githubVerificationUnavailable = INCLUDE_GITHUB_VERIFICATION &&
+              (!githubManifestResult.available || !githubMainCommitResult.available);
+            const githubVerificationError = githubManifestResult.error || githubMainCommitResult.error || null;
+            const githubRateLimited = isGithubRateLimitError(githubVerificationError);
+            if (githubVerificationUnavailable) {
+              logVerificationStep('GitHub verification unavailable; IPFS verification will still determine the result', {
+                error: githubVerificationError ? githubVerificationError.message : null,
+                rateLimited: githubRateLimited
+              });
+            }
 
             const liveFileComparison = await verifyCurrentSiteFileBytes(originManifest);
             filesModalRows = liveFileComparison.checkedFiles || [];
             renderFilesModalRows(filesModalRows);
             logVerificationStep('current site live file hashes', liveFileComparison);
 
-            const githubFileComparison = compareManifestFiles(originManifest, githubManifest);
-            if (INCLUDE_GITHUB_VERIFICATION) {
+            const githubFileComparison = githubManifest ? compareManifestFiles(originManifest, githubManifest) : null;
+            if (INCLUDE_GITHUB_VERIFICATION && githubManifest) {
               logVerificationStep('GitHub raw manifest parsed', summarizeManifest(githubManifest, githubFileComparison));
             }
-            const githubAggregateContentMatchesOrigin = githubManifest.contentSha256 === originManifest.contentSha256;
-            const githubRevisionMatchesOrigin = githubManifest.gitRevision === originManifest.gitRevision;
-            const githubManifestMatchesOrigin = githubAggregateContentMatchesOrigin &&
+            const githubAggregateContentMatchesOrigin = githubManifest ? githubManifest.contentSha256 === originManifest.contentSha256 : false;
+            const githubRevisionMatchesOrigin = githubManifest ? githubManifest.gitRevision === originManifest.gitRevision : false;
+            const githubManifestMatchesOrigin = Boolean(githubManifest) &&
+              githubAggregateContentMatchesOrigin &&
               githubRevisionMatchesOrigin &&
               githubFileComparison.matches;
-            if (githubHashEl) setDetail(githubHashEl, shortHash(githubManifest.contentSha256), githubManifest.contentSha256);
-            if (githubDetailEl) setDetailState(githubDetailEl, githubManifestMatchesOrigin ? 'passed' : null);
+            if (githubHashEl) {
+              if (githubManifest) {
+                setDetail(githubHashEl, shortHash(githubManifest.contentSha256), githubManifest.contentSha256);
+              } else {
+                setDetail(
+                  githubHashEl,
+                  githubRateLimited ? 'rate limited — not checked' : 'unavailable — not checked',
+                  githubVerificationError ? githubVerificationError.message : 'GitHub manifest unavailable'
+                );
+              }
+            }
+            if (githubDetailEl) {
+              const githubDetailState = githubManifestMatchesOrigin
+                ? 'passed'
+                : githubVerificationUnavailable ? 'warning' : null;
+              setDetailState(githubDetailEl, githubDetailState);
+            }
 
             const gatewayResults = gatewayResult.fulfilled.map((result) => {
               const aggregateContentMatchesOrigin = result.manifest.contentSha256 === originManifest.contentSha256;
@@ -1392,24 +1448,32 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
               gatewayModalRows.map((row) => row.manifestUrl + ' — ' + row.state + ' — ' + (row.revision || 'no revision') + ' — ' + (row.hash || row.error || 'no content hash')).join(String.fromCharCode(10))
             );
             setDetailState(gatewayDetailEl, hasMatchingGatewayManifest ? 'passed' : null);
-            const sameContent = githubAggregateContentMatchesOrigin && hasMatchingGatewayManifest;
-            const sameRevision = githubRevisionMatchesOrigin && hasMatchingGatewayManifest;
-            const sameFiles = githubFileComparison.matches && hasMatchingGatewayManifest && liveFileComparison.matches;
+            const githubChecksRequired = INCLUDE_GITHUB_VERIFICATION && !githubVerificationUnavailable;
+            const githubContentOk = !githubChecksRequired || githubAggregateContentMatchesOrigin;
+            const githubRevisionOk = !githubChecksRequired || githubRevisionMatchesOrigin;
+            const githubFilesOk = !githubChecksRequired || Boolean(githubFileComparison && githubFileComparison.matches);
+            const githubReferenceLabel = githubChecksRequired ? 'GitHub raw and ' : '';
+            const sameContent = githubContentOk && hasMatchingGatewayManifest;
+            const sameRevision = githubRevisionOk && hasMatchingGatewayManifest;
+            const sameFiles = githubFilesOk && hasMatchingGatewayManifest && liveFileComparison.matches;
             const verifiedFileCount = Array.isArray(originManifest.files) ? originManifest.files.length : 0;
             const matchingGatewayLabels = matchingGatewayResults.map((result) => result.label).filter(Boolean);
             filesStatusEl.textContent = sameFiles
-              ? verifiedFileCount + ' files match ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw and ' : '') + formatRevisionList(matchingGatewayLabels) + '; browser hashed ' + liveFileComparison.checked + ' non-image files'
+              ? verifiedFileCount + ' files match ' + githubReferenceLabel + formatRevisionList(matchingGatewayLabels) + '; browser hashed ' + liveFileComparison.checked + ' non-image files'
               : 'Mismatch, unavailable gateway, or live browser hash failure';
             filesStatusEl.title = sameFiles
-              ? 'Every files[] path, byte count, and SHA-256 hash in this site manifest matches ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw and ' : '') + 'at least one public gateway manifest; the browser also fetched and hashed current-site non-image files. Image files were skipped.'
-              : 'The files[] entries did not match across this site, ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw, and ' : '') + 'a public gateway manifest, or the browser live hash check failed for current-site non-image files.';
+              ? 'Every files[] path, byte count, and SHA-256 hash in this site manifest matches ' + githubReferenceLabel + 'at least one public gateway manifest; the browser also fetched and hashed current-site non-image files. Image files were skipped.'
+              : 'The files[] entries did not match across this site, ' + (githubChecksRequired ? 'GitHub raw, and ' : '') + 'a public gateway manifest, or the browser live hash check failed for current-site non-image files.';
             setDetailState(filesDetailEl, sameFiles ? 'passed' : null);
-            const githubMainAcceptableRevisions = [githubMainCommit.sha].concat(githubMainCommit.parentShas);
-            const manifestRevisionIsCurrentGithubPublication = !INCLUDE_GITHUB_VERIFICATION ||
+            const githubMainAcceptableRevisions = githubMainCommit && githubMainCommit.sha
+              ? [githubMainCommit.sha].concat(githubMainCommit.parentShas)
+              : [];
+            const manifestRevisionIsCurrentGithubPublication = !githubChecksRequired ||
               githubMainAcceptableRevisions.includes(githubManifest.gitRevision) &&
               githubMainAcceptableRevisions.includes(originManifest.gitRevision) &&
               matchingGatewayResults.some((result) => githubMainAcceptableRevisions.includes(result.manifest.gitRevision));
-            const anyDirtyManifest = originManifest.gitRevisionDirty || githubManifest.gitRevisionDirty ||
+            const anyDirtyManifest = originManifest.gitRevisionDirty ||
+              Boolean(githubManifest && githubManifest.gitRevisionDirty) ||
               gatewayResults.some((result) => result.manifest.gitRevisionDirty);
             const gatewayFileComparisons = gatewayResults.map((result) => ({
               label: result.label,
@@ -1429,6 +1493,8 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
                 revisionMatchesOrigin: githubRevisionMatchesOrigin,
                 fileComparison: summarizeFileComparison(githubFileComparison)
               },
+              githubVerificationUnavailable,
+              githubRateLimited,
               gateways: gatewayFileComparisons,
               hasMatchingGatewayManifest,
               manifestRevisionIsCurrentGithubPublication,
@@ -1447,11 +1513,11 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
             } else if (!hasMatchingGatewayManifest && olderGatewayResults.length) {
               setStatus('warning', 'Outdated: checked public IPFS gateways are serving a known older site version.');
             } else if (!sameContent) {
-              setStatus('warning', 'Aggregate content mismatch: current site, ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw manifest, and ' : '') + 'at least one public IPFS gateway must report the same content hash.');
+              setStatus('warning', 'Aggregate content mismatch: current site, ' + (githubChecksRequired ? 'GitHub raw manifest, and ' : '') + 'at least one public IPFS gateway must report the same content hash.');
             } else if (!sameRevision) {
-              setStatus('warning', 'Git revision mismatch: current site, ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw manifest, and ' : '') + 'at least one public IPFS gateway must point at the same Git revision.');
+              setStatus('warning', 'Git revision mismatch: current site, ' + (githubChecksRequired ? 'GitHub raw manifest, and ' : '') + 'at least one public IPFS gateway must point at the same Git revision.');
             } else if (!sameFiles) {
-              setStatus('warning', 'Per-file mismatch: files[] paths, byte counts, and SHA-256 hashes must match between this site, ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw, and ' : '') + 'at least one public IPFS gateway, and the browser must hash all current-site non-image files to the manifest values.');
+              setStatus('warning', 'Per-file mismatch: files[] paths, byte counts, and SHA-256 hashes must match between this site, ' + (githubChecksRequired ? 'GitHub raw, and ' : '') + 'at least one public IPFS gateway, and the browser must hash all current-site non-image files to the manifest values.');
             } else if (!manifestRevisionIsCurrentGithubPublication) {
               const matchingGatewayRevisions = matchingGatewayResults.map((result) => result.manifest.gitRevision).filter(Boolean);
               setStatus(
@@ -1461,6 +1527,14 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
                   'Current site manifest revision: ' + formatRevision(originManifest.gitRevision) + '. ' +
                   'GitHub raw manifest revision: ' + formatRevision(githubManifest.gitRevision) + '. ' +
                   'Matching public gateway manifest revisions: ' + formatRevisionList(matchingGatewayRevisions) + '.'
+              );
+            } else if (githubVerificationUnavailable) {
+              setStatus(
+                'verified',
+                'IPFS verification passed: current site, ' + formatRevisionList(matchingGatewayLabels) + ', every files[] path/byte/hash, and live browser hashes for current-site non-image files match. ' +
+                  (githubRateLimited
+                    ? 'GitHub cross-check skipped because the GitHub request was rate limited (advisory only, does not affect the IPFS result).'
+                    : 'GitHub cross-check skipped because the GitHub request failed (advisory only, does not affect the IPFS result).')
               );
             } else {
               setStatus('verified', 'Verified: current site, at least one public IPFS gateway, ' + (INCLUDE_GITHUB_VERIFICATION ? 'GitHub raw manifest, current GitHub publication revision, ' : '') + 'every files[] path/byte/hash, and live browser hashes for current-site non-image files match.');
