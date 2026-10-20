@@ -1473,7 +1473,7 @@ function createSharedFooterTemplate(copyrightYear, options = {}) {
               githubMainAcceptableRevisions.includes(originManifest.gitRevision) &&
               matchingGatewayResults.some((result) => githubMainAcceptableRevisions.includes(result.manifest.gitRevision));
             const anyDirtyManifest = originManifest.gitRevisionDirty ||
-              Boolean(githubManifest && githubManifest.gitRevisionDirty) ||
+              Boolean(githubChecksRequired && githubManifest && githubManifest.gitRevisionDirty) ||
               gatewayResults.some((result) => result.manifest.gitRevisionDirty);
             const gatewayFileComparisons = gatewayResults.map((result) => ({
               label: result.label,
