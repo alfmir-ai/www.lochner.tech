@@ -5,16 +5,16 @@
   "ipnsId": "k2k4r8jw4dtnalpkgklrqeflhsgderg6a8wn5lix7bww1yjemm0rx7ye",
   "source": "https://lochner.tech",
   "manifestPath": "ipfs-version.json",
-  "gitRevision": "fab36ae5dbc94843d6248817f3288b3ea5f85a49",
+  "gitRevision": "df5ba4181042711104fdaf301273f259c2e501aa",
   "gitRevisionDirty": false,
   "gitRepositoryUrl": "https://github.com/alfmir-ai/www.lochner.tech",
-  "gitCommitUrl": "https://github.com/alfmir-ai/www.lochner.tech/commit/fab36ae5dbc94843d6248817f3288b3ea5f85a49",
-  "gitTreeUrl": "https://github.com/alfmir-ai/www.lochner.tech/tree/fab36ae5dbc94843d6248817f3288b3ea5f85a49",
+  "gitCommitUrl": "https://github.com/alfmir-ai/www.lochner.tech/commit/df5ba4181042711104fdaf301273f259c2e501aa",
+  "gitTreeUrl": "https://github.com/alfmir-ai/www.lochner.tech/tree/df5ba4181042711104fdaf301273f259c2e501aa",
   "includeGithubVerification": true,
-  "contentSha256": "cfae5dff54b1e466c84bb04dd7efb4b7ec7b3d6a8e977769085d6752f3498f67",
+  "contentSha256": "6f175a95b8cfa25fa895c305aa59aec76b7f3c1cc92721b7c4b38757df3016af",
   "previousContentSha256": [
-    "bfcf7c8ab328cd68c258c450cee5078075904e74fd945d60040f4daa0d8bca67",
-    "ea06db0493ef4013c9af4a92182ff0b50c8b7e5c4e94d18472412c857c8f817a"
+    "ea06db0493ef4013c9af4a92182ff0b50c8b7e5c4e94d18472412c857c8f817a",
+    "cfae5dff54b1e466c84bb04dd7efb4b7ec7b3d6a8e977769085d6752f3498f67"
   ],
   "files": [
     {
@@ -29,8 +29,8 @@
     },
     {
       "path": "alfmir.ai.html",
-      "bytes": 90370,
-      "sha256": "c58792c423b345d68e394877f21f37cccfcd5ed0ac73a8ed994824b6e54221c8"
+      "bytes": 89194,
+      "sha256": "2d12ab37270fd909456bbc850960a45e31f1712cf6c543256ae8a3709e775563"
     },
     {
       "path": "assets/fonts/LochnerBrandSans-Bold.ttf",
@@ -85,12 +85,12 @@
     {
       "path": "index.html",
       "bytes": 88151,
-      "sha256": "66b33527b2ef2ddaafeeb874a11285b230cba0f14732f8ccabd1ebff9d229211"
+      "sha256": "d472875617bb1940a78c0ff3cb1efa1736053822f20aee5c78cc95fe6214e3bb"
     },
     {
       "path": "lochner-apparel.html",
       "bytes": 85296,
-      "sha256": "37ee63d5d6a98a1d531d52fc7038c5d104606d86df2da5131e2988eab64da53a"
+      "sha256": "6a2ebcb8d3135badd2a6de1c51156cff6b6d160d0f3f4cf862886f5a2abad5a2"
     }
   ]
 }
