@@ -5,16 +5,16 @@
   "ipnsId": "k2k4r8jw4dtnalpkgklrqeflhsgderg6a8wn5lix7bww1yjemm0rx7ye",
   "source": "https://lochner.tech",
   "manifestPath": "ipfs-version.json",
-  "gitRevision": "936e973fac219db3e9ac53f573ed5a2bdd08fef7",
+  "gitRevision": "55adf3c4ecbf518d93a2ec41ef2fbf610368162f",
   "gitRevisionDirty": false,
   "gitRepositoryUrl": "https://github.com/alfmir-ai/www.lochner.tech",
-  "gitCommitUrl": "https://github.com/alfmir-ai/www.lochner.tech/commit/936e973fac219db3e9ac53f573ed5a2bdd08fef7",
-  "gitTreeUrl": "https://github.com/alfmir-ai/www.lochner.tech/tree/936e973fac219db3e9ac53f573ed5a2bdd08fef7",
+  "gitCommitUrl": "https://github.com/alfmir-ai/www.lochner.tech/commit/55adf3c4ecbf518d93a2ec41ef2fbf610368162f",
+  "gitTreeUrl": "https://github.com/alfmir-ai/www.lochner.tech/tree/55adf3c4ecbf518d93a2ec41ef2fbf610368162f",
   "includeGithubVerification": true,
-  "contentSha256": "a4f7a7a2a06d789e353d8b8a5fa63f3e40adf6df972003331fbd1be7a334a4fb",
+  "contentSha256": "88aec102e296970b318f75871605e4434986b4c087e7d6bbba2da7b71d887f8f",
   "previousContentSha256": [
-    "78de316a808f84851a238113c63c6a4a4de3ffd2c5c60c77ed5e2e3f5e01844f",
-    "7fd37b7aeced798debf351967e2a20522614e1fb3a5ee518a0ba1d64379d6a1b"
+    "7fd37b7aeced798debf351967e2a20522614e1fb3a5ee518a0ba1d64379d6a1b",
+    "a4f7a7a2a06d789e353d8b8a5fa63f3e40adf6df972003331fbd1be7a334a4fb"
   ],
   "files": [
     {
@@ -29,8 +29,8 @@
     },
     {
       "path": "alfmir.ai.html",
-      "bytes": 88983,
-      "sha256": "fc8a8e24253148b58eb72040eeb4557bf46f41985be084723e826527427b8be1"
+      "bytes": 88980,
+      "sha256": "afbc21b0bac5624b8c3f5585f10450535362c69ca148bee29f09fc96e901977e"
     },
     {
       "path": "assets/fonts/LochnerBrandSans-Bold.ttf",
@@ -84,13 +84,13 @@
     },
     {
       "path": "index.html",
-      "bytes": 88153,
-      "sha256": "7ad88104f6ee47774d4fd67da82d4c147af368e501a6ed8e03b0fba796129165"
+      "bytes": 88150,
+      "sha256": "43c668b77843e0354a4c896f1c55f4d4f00d237909687a2febd97dc24c8feb72"
     },
     {
       "path": "lochner-apparel.html",
-      "bytes": 85296,
-      "sha256": "1678a0d21cbe62048bf9d98d5e33d76ce96602a46afcd54f583c7893c0448400"
+      "bytes": 85293,
+      "sha256": "cd27d567b2d38d9c85df956944e1001fd3b3f3cdb7f1b6ab8a9857a73395c198"
     }
   ]
 }
